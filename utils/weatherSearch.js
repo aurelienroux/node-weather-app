@@ -1,21 +1,21 @@
 const request = require('request')
 
-const weatherSearch = (location, callback) => {
-  const weatherUrl = `http://api.weatherstack.com/current?access_key=${process.env.WEATHER_API_KEY}&query=${location.latitude},${location.longitude}
+const weatherSearch = (latitude, longitude, callback) => {
+  const weatherUrl = `http://api.weatherstack.com/current?access_key=${process.env.WEATHER_API_KEY}&query=${latitude},${longitude}
   }`
 
-  request({ url: weatherUrl, json: true }, (err, resp) => {
+  request({ url: weatherUrl, json: true }, (err, { body } = {}) => {
     if (err) {
       callback('Unable to connect to forecast service', undefined)
-    } else if (resp.body.error) {
-      callback('Unable to find location', undefined)
+    } else if (body.error) {
+      callback('Unable to find weather location', undefined)
     } else {
       callback(
         undefined,
         `
-        It is currently ${resp.body.current.temperature} degrees in ${resp.body.location.name}.
-        It feels like ${resp.body.current.feelslike} degrees.
-        Weather conditions are ${resp.body.current.weather_descriptions[0]}
+        It is currently ${body.current.temperature} degrees.
+        It feels like ${body.current.feelslike} degrees.
+        Weather conditions are ${body.current.weather_descriptions[0]}
         `
       )
     }
