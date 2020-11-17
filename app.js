@@ -1,21 +1,21 @@
 require('dotenv').config()
+const process = require('process')
 const geocode = require('./utils/geocode')
 const weatherSearch = require('./utils/weatherSearch')
 
-const location = 'montreal'
+const location = process.argv[2]
 
-geocode(location, (err, resp) => {
-  if (err) {
-    console.log(err) // eslint-disable-line
-  } else {
-    console.log(resp) // eslint-disable-line
-  }
-})
+if (!location) {
+  console.log('No location was provided') // eslint-disable-line
+} else {
+  geocode(location, (geoErr, geoResp) => {
+    if (geoErr) return console.log(geoErr) // eslint-disable-line
 
-weatherSearch(location, (err, resp) => {
-  if (err) {
-    console.log(err) // eslint-disable-line
-  } else {
-    console.log(resp) // eslint-disable-line
-  }
-})
+    return weatherSearch(geoResp, (weatherErr, weatherResp) => {
+      if (weatherErr) console.log(weatherErr) // eslint-disable-line
+
+      console.log(geoResp.placeName) // eslint-disable-line
+      console.log(weatherResp) // eslint-disable-line
+    })
+  })
+}
