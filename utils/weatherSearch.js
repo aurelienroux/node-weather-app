@@ -1,8 +1,7 @@
 const request = require('request')
 
 const weatherSearch = (latitude, longitude, callback) => {
-  const weatherUrl = `http://api.weatherstack.com/current?access_key=${process.env.WEATHER_API_KEY}&query=${latitude},${longitude}
-  }`
+  const weatherUrl = `http://api.weatherstack.com/current?access_key=${process.env.WEATHER_API_KEY}&query=${latitude},${longitude}`
 
   request({ url: weatherUrl, json: true }, (err, { body } = {}) => {
     if (err) {
